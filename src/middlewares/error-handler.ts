@@ -6,6 +6,8 @@ const errorHandleMiddleware = (
   res: Response,
   next: NextFunction
 ) => {
+  console.log(chalk.redBright("In error handler", err));
+
   res.status(500).json({ msg: "Something went wrong" });
 };
 

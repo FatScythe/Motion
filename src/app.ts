@@ -16,7 +16,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.get("/health-check", (req: Request, res: Response) => {
-  throw new Error("Testing");
   res.status(200).send({ msg: "Hello dunya" });
 });
 
