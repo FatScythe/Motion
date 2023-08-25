@@ -3,6 +3,8 @@ require("express-async-errors");
 import express, { Express, Request, Response } from "express";
 import chalk from "chalk";
 import config from "config";
+// Routes
+import router from "./router";
 // DB
 import connectDB from "./db/connectDB";
 // Middlewares
@@ -14,6 +16,7 @@ const app: Express = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use("/", router);
 
 app.get("/health-check", (req: Request, res: Response) => {
   res.status(200).send({ msg: "Hello dunya" });
