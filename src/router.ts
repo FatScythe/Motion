@@ -1,14 +1,11 @@
 import express, { Request, Response } from "express";
+import { registerUser, loginUser } from "./controllers/auth.ctrl";
 
 const router = express();
 
-router.post("/register", async (req: Request, res: Response) => {
-  res.send("Register User");
-});
+router.post("/register", registerUser);
 
-router.post("/login", async (req: Request, res: Response) => {
-  res.send("Login User");
-});
+router.post("/login", loginUser);
 
 router.delete("/logout", async (req: Request, res: Response) => {
   res.send("Hello");
