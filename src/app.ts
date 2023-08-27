@@ -9,11 +9,14 @@ import router from "./router";
 import connectDB from "./db/connectDB";
 // Middlewares
 import errorHandleMiddleware from "./middlewares/error-handler";
+// Cookies
+import cookieParser from "cookie-parser";
 
 const port = config.get("port") as number;
 
 const app: Express = express();
 
+app.use(cookieParser(config.get("JWT")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use("/", router);
