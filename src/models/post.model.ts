@@ -6,20 +6,23 @@ interface PostDocument extends Document {
   author: Types.ObjectId;
 }
 
-const postSchema = new Schema<PostDocument>({
-  title: {
-    type: String,
-    required: [true, "Please provide title fot the post"],
+const postSchema = new Schema<PostDocument>(
+  {
+    title: {
+      type: String,
+      required: [true, "Please provide title fot the post"],
+    },
+    body: {
+      type: String,
+      required: [true, "Please provide post contents"],
+    },
+    author: {
+      type: Schema.Types.ObjectId,
+      ref: "Users",
+      required: [true, "Please provide an author"],
+    },
   },
-  body: {
-    type: String,
-    required: [true, "Please provide post contents"],
-  },
-  author: {
-    type: Schema.Types.ObjectId,
-    ref: "Users",
-    required: [true, "Please provide an author"],
-  },
-});
+  { timestamps: true }
+);
 
 export default model<PostDocument>("Posts", postSchema);

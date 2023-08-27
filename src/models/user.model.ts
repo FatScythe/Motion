@@ -11,36 +11,39 @@ interface UserDocument extends Document {
   comparePassword(Cpwd: string): Promise<boolean>;
 }
 
-const userSchema = new Schema<UserDocument>({
-  name: {
-    type: String,
-    required: [true, "Please provide a name"],
-    minlength: [2, "Name cannot be less than two characters"],
+const userSchema = new Schema<UserDocument>(
+  {
+    name: {
+      type: String,
+      required: [true, "Please provide a name"],
+      minlength: [2, "Name cannot be less than two characters"],
+    },
+    email: {
+      type: String,
+      required: [true, "Please provide an email"],
+      match: [
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+        "Please provide a valid email",
+      ],
+      unique: true,
+    },
+    password: {
+      type: String,
+      minLength: [6, "Password character should be at least 6"],
+      required: [true, "Please provide a password"],
+    },
+    role: {
+      type: String,
+      enum: ["editor", "reader", "admin"],
+      default: "reader",
+    },
+    isSubscribed: {
+      type: Boolean,
+      default: false,
+    },
   },
-  email: {
-    type: String,
-    required: [true, "Please provide an email"],
-    match: [
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-      "Please provide a valid email",
-    ],
-    unique: true,
-  },
-  password: {
-    type: String,
-    minLength: [6, "Password character should be at least 6"],
-    required: [true, "Please provide a password"],
-  },
-  role: {
-    type: String,
-    enum: ["editor", "reader", "admin"],
-    default: "reader",
-  },
-  isSubscribed: {
-    type: Boolean,
-    default: false,
-  },
-});
+  { timestamps: true }
+);
 
 userSchema.pre("save", async function () {
   if (!this.isModified("password")) return;
