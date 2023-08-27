@@ -1,12 +1,12 @@
 import { Schema, model, Document, Types } from "mongoose";
 
-export interface PostDocument extends Document {
+export interface IPost extends Document {
   title: string;
   body: string;
   author: Types.ObjectId;
 }
 
-const postSchema = new Schema<PostDocument>(
+const postSchema = new Schema<IPost>(
   {
     title: {
       type: String,
@@ -25,4 +25,4 @@ const postSchema = new Schema<PostDocument>(
   { timestamps: true }
 );
 
-export default model<PostDocument>("Posts", postSchema);
+export default model<IPost>("Posts", postSchema);

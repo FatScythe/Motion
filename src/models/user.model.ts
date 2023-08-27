@@ -1,8 +1,8 @@
 import { Schema, model, Document } from "mongoose";
 import bcrypt from "bcrypt";
-import config, { has } from "config";
+import config from "config";
 
-export interface UserDocument extends Document {
+export interface IUser extends Document {
   name: string;
   email: string;
   password: string;
@@ -11,7 +11,7 @@ export interface UserDocument extends Document {
   comparePassword(Cpwd: string): Promise<boolean>;
 }
 
-const userSchema = new Schema<UserDocument>(
+const userSchema = new Schema<IUser>(
   {
     name: {
       type: String,
@@ -47,7 +47,7 @@ const userSchema = new Schema<UserDocument>(
 
 userSchema.pre("save", async function () {
   if (!this.isModified("password")) return;
-  const user: UserDocument = this;
+  const user: IUser = this;
 
   const salt = await bcrypt.genSalt(config.get("saltRounds"));
   const hashedPwd = await bcrypt.hash(user.password, salt);
@@ -58,8 +58,7 @@ userSchema.pre("save", async function () {
 userSchema.methods.comparePassword = async function (
   candidatePassword: string
 ) {
-  const user: UserDocument = this.user;
-  return bcrypt.compare(candidatePassword, user.password);
+  return bcrypt.compare(candidatePassword, this.password);
 };
 
-export default model<UserDocument>("Users", userSchema);
+export default model<IUser>("Users", userSchema);

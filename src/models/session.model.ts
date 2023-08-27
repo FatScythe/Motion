@@ -1,6 +1,6 @@
 import { Schema, model, Document, Types } from "mongoose";
 
-export interface sessionDocument extends Document {
+export interface ISession extends Document {
   refreshToken: string;
   ip: string;
   valid: boolean;
@@ -8,7 +8,7 @@ export interface sessionDocument extends Document {
   user: Types.ObjectId;
 }
 
-const sessionSchema = new Schema<sessionDocument>(
+const sessionSchema = new Schema<ISession>(
   {
     refreshToken: { type: String, required: true },
     ip: { type: String, required: true },
@@ -19,4 +19,4 @@ const sessionSchema = new Schema<sessionDocument>(
   { timestamps: true }
 );
 
-export default model<sessionDocument>("Sessions", sessionSchema);
+export default model<ISession>("Sessions", sessionSchema);
