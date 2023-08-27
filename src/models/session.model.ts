@@ -1,6 +1,6 @@
 import { Schema, model, Document, Types } from "mongoose";
 
-interface sessionDocument extends Document {
+export interface sessionDocument extends Document {
   refreshToken: string;
   ip: string;
   valid: boolean;

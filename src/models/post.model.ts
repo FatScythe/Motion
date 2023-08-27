@@ -1,6 +1,6 @@
 import { Schema, model, Document, Types } from "mongoose";
 
-interface PostDocument extends Document {
+export interface PostDocument extends Document {
   title: string;
   body: string;
   author: Types.ObjectId;
