@@ -1,9 +1,14 @@
 import { Request, Response } from "express";
-import { BadRequestError, NotFoundError } from "../errors";
+import {
+  BadRequestError,
+  NotFoundError,
+  UnauthenticatedError,
+} from "../errors";
 import User from "../models/user.model";
 import Session from "../models/session.model";
 import crypto from "crypto";
 import { AttachCookies } from "../utils/cookies";
+import createTokenUser from "../utils/createTokenUser";
 
 const registerUser = async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
@@ -13,7 +18,7 @@ const registerUser = async (req: Request, res: Response) => {
   }
 
   const isFirstUser = (await User.countDocuments({})) === 0;
-  const role = isFirstUser ? "reader" : "admin";
+  const role = isFirstUser ? "admin" : "reader";
 
   await User.create({ name, email, password, role });
 
@@ -33,13 +38,32 @@ const loginUser = async (req: Request, res: Response) => {
     throw new NotFoundError("Invalid Credentials");
   }
 
+  const tokenUser = createTokenUser(user);
+
   const isPasswordCorrect = await user.comparePassword(password);
 
   if (!isPasswordCorrect) {
     throw new BadRequestError("Invalid Credentials!!!");
   }
 
-  let refreshToken = crypto.randomBytes(40).toString("hex");
+  let refreshToken = "";
+
+  const existingToken = await Session.findOne({ user: user._id });
+
+  if (existingToken) {
+    const { valid } = existingToken;
+    if (!valid) {
+      throw new UnauthenticatedError("Invalid Credentials");
+    }
+
+    refreshToken = existingToken.refreshToken;
+
+    AttachCookies(res, tokenUser, refreshToken);
+
+    return res.status(200).json({ msg: "Login sucessfully" });
+  }
+
+  refreshToken = crypto.randomBytes(40).toString("hex");
   let ip = req.ip;
   let userAgent = req.get("user-agent");
 
@@ -49,14 +73,6 @@ const loginUser = async (req: Request, res: Response) => {
     userAgent,
     user: user._id,
   });
-
-  const tokenUser = {
-    name: user.name,
-    email: user.email,
-    _id: user._id,
-    role: user.role,
-    isSubscribed: user.isSubscribed,
-  };
 
   AttachCookies(res, tokenUser, refreshToken);
 
