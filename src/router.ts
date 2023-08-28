@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { registerUser, loginUser } from "./controllers/auth.ctrl";
+import { registerUser, loginUser, logoutUser } from "./controllers/auth.ctrl";
 import { showMe } from "./controllers/user.ctrl";
 import {
   authenticateUser,
@@ -12,16 +12,9 @@ router.post("/register", registerUser);
 
 router.post("/login", loginUser);
 
-router.delete("/logout", async (req: Request, res: Response) => {
-  res.send("Hello");
-});
+router.delete("/logout", authenticateUser, logoutUser);
 
-router.get(
-  "/user/showMe",
-  authenticateUser,
-  authorizePermission("admin"),
-  showMe
-);
+router.get("/user/showMe", authenticateUser, showMe);
 
 router.get("/posts", async (req: Request, res: Response) => {
   res.send("Get All post");
