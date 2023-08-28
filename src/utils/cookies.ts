@@ -20,13 +20,13 @@ export const AttachCookies = async (
 
   const oneDay = 1000 * 60 * 60 * 24;
 
-  res.cookie("Access Token", accessTokenJWT, {
-    maxAge: 1000 * 60 * 5,
+  res.cookie("accessToken", accessTokenJWT, {
+    maxAge: 1000 * 60 * 15,
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     signed: true,
   });
-  res.cookie("Refresh Token", refreshTokenJWT, {
+  res.cookie("refreshToken", refreshTokenJWT, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     expires: new Date(Date.now() + oneDay),
