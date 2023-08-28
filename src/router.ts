@@ -1,5 +1,10 @@
 import express, { Request, Response } from "express";
 import { registerUser, loginUser } from "./controllers/auth.ctrl";
+import { showMe } from "./controllers/user.ctrl";
+import {
+  authenticateUser,
+  authorizePermission,
+} from "./middlewares/authentication-handler";
 
 const router = express();
 
@@ -10,6 +15,13 @@ router.post("/login", loginUser);
 router.delete("/logout", async (req: Request, res: Response) => {
   res.send("Hello");
 });
+
+router.get(
+  "/user/showMe",
+  authenticateUser,
+  authorizePermission("admin"),
+  showMe
+);
 
 router.get("/posts", async (req: Request, res: Response) => {
   res.send("Get All post");
