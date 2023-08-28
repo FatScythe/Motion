@@ -15,10 +15,11 @@ const authenticateUser = async (
     if (accessToken) {
       const payload = isTokenValid(accessToken);
       // @ts-ignore
-      req.user = payload.user;
-      next();
+      req.user = payload;
+      return next();
     }
     const payload = isTokenValid(refreshToken);
+
     // @ts-ignore
     const existingToken = await Session.findOne({
       // @ts-ignore
