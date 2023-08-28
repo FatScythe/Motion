@@ -79,4 +79,20 @@ const loginUser = async (req: Request, res: Response) => {
   res.status(200).json({ msg: "Login sucessfully" });
 };
 
-export { registerUser, loginUser };
+const logoutUser = async (req: Request, res: Response) => {
+  // @ts-ignore
+  await Session.findOneAndDelete({ user: req.user._id });
+
+  res.cookie("accessToken", "logout", {
+    expires: new Date(Date.now()),
+    httpOnly: true,
+  });
+  res.cookie("refreshToken", "logout", {
+    httpOnly: true,
+    expires: new Date(Date.now()),
+  });
+
+  res.status(200).json({ msg: "User have been logged out" });
+};
+
+export { registerUser, loginUser, logoutUser };
