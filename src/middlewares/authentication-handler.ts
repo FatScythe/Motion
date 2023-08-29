@@ -42,7 +42,7 @@ const authenticateUser = async (
   }
 };
 
-type role = "reader" | "author" | "admin";
+type role = "reader" | "editor" | "admin";
 const authorizePermission = (...roles: role[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
     // @ts-ignore
