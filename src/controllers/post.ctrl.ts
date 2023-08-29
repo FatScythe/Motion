@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import Post from "../models/post.model";
 import { BadRequestError, NotFoundError } from "../errors";
 import checkPermission from "../utils/check.permission";
+import User from "../models/user.model";
 
 export const getAllPost = async (req: Request, res: Response) => {
   const posts = await Post.find({});
@@ -23,7 +24,15 @@ export const addPost = async (req: Request, res: Response) => {
     throw new BadRequestError("Please fill all fields");
   }
 
-  await Post.create({ title, body, author: req.user?._id });
+  const user = await User.findOne({ _id: req.user?._id });
+
+  if (user && user?.role) {
+    user.role = "editor";
+  }
+
+  await user?.save();
+
+  await Post.create({ title, body, author: user?._id });
 
   res.status(201).json({ msg: "Created new post" });
 };
