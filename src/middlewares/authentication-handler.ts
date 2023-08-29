@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import { UnauthenticatedError, Unauthorized } from "../errors";
-import { IUser } from "../models/user.model";
 import Session from "../models/session.model";
 import { isTokenValid, AttachCookies } from "../utils/cookies";
 
