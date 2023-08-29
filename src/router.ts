@@ -30,6 +30,9 @@ router
   .get(getSinglePost)
   .post(authenticateUser, addPost)
   .patch([authenticateUser, authorizePermission("admin", "author")], editPost)
-  .delete([authenticateUser, authorizePermission("admin", "author")]);
+  .delete(
+    [authenticateUser, authorizePermission("admin", "author")],
+    deletePost
+  );
 
 export default router;
