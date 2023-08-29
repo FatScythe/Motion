@@ -5,6 +5,13 @@ import {
   authenticateUser,
   authorizePermission,
 } from "./middlewares/authentication-handler";
+import {
+  addPost,
+  getAllPost,
+  getSinglePost,
+  editPost,
+  deletePost,
+} from "./controllers/post.ctrl";
 
 const router = express();
 
@@ -16,16 +23,13 @@ router.delete("/logout", authenticateUser, logoutUser);
 
 router.get("/user/showMe", authenticateUser, showMe);
 
-router.get("/posts", async (req: Request, res: Response) => {
-  res.send("Get All post");
-});
+router.route("/post").get(getAllPost).post(addPost);
 
-router.post("/post/:id", async (req: Request, res: Response) => {
-  res.send("Get single post");
-});
-
-router.patch("/post/:id", async (req: Request, res: Response) => {
-  res.send("Edit post");
-});
+router
+  .route("/post/:id")
+  .get(getSinglePost)
+  .post(authenticateUser, addPost)
+  .patch([authenticateUser, authorizePermission("admin", "author")], editPost)
+  .delete([authenticateUser, authorizePermission("admin", "author")]);
 
 export default router;
