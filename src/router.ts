@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import { registerUser, loginUser, logoutUser } from "./controllers/auth.ctrl";
 import { showMe } from "./controllers/user.ctrl";
 import {
@@ -29,9 +29,9 @@ router
   .route("/post/:id")
   .get(getSinglePost)
   .post(authenticateUser, addPost)
-  .patch([authenticateUser, authorizePermission("admin", "author")], editPost)
+  .patch([authenticateUser, authorizePermission("admin", "editor")], editPost)
   .delete(
-    [authenticateUser, authorizePermission("admin", "author")],
+    [authenticateUser, authorizePermission("admin", "editor")],
     deletePost
   );
 
