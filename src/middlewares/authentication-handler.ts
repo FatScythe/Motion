@@ -53,4 +53,16 @@ const authorizePermission = (...roles: role[]) => {
   };
 };
 
-export { authenticateUser, authorizePermission };
+const authenticateVisitor = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { accessToken, refreshToken } = req.signedCookies;
+  if (accessToken == undefined || refreshToken == undefined) {
+    return next();
+  }
+  authenticateUser(req, res, next);
+};
+
+export { authenticateUser, authorizePermission, authenticateVisitor };
