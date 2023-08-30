@@ -13,7 +13,10 @@ export const getAllPost = async (req: Request, res: Response) => {
 
 export const getSinglePost = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const post = await Post.findOne({ _id: id });
+  const post = await Post.findOne({ _id: id }).populate({
+    path: "author",
+    select: "name",
+  });
 
   res.status(200).json({ post });
 };
@@ -26,11 +29,10 @@ export const addPost = async (req: Request, res: Response) => {
 
   const user = await User.findOne({ _id: req.user?._id });
 
-  if (user && user?.role) {
+  if (user?.role && user.role == "reader") {
     user.role = "editor";
+    await user.save();
   }
-
-  await user?.save();
 
   await Post.create({ title, body, author: user?._id });
 
@@ -69,5 +71,5 @@ export const editPost = async (req: Request, res: Response) => {
     { runValidators: true, new: true }
   );
 
-  res.status(200).json({ msg: "Post has been deleted" });
+  res.status(200).json({ msg: "Post has been editted" });
 };
