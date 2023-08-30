@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from "express";
+import express, { Request, Response } from "express";
 import rateLimit from "express-rate-limit";
 import { registerUser, loginUser, logoutUser } from "./controllers/auth.ctrl";
 import { showMe } from "./controllers/user.ctrl";
