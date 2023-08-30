@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { UnauthenticatedError, Unauthorized } from "../errors";
 import Session from "../models/session.model";
 import { isTokenValid, AttachCookies } from "../utils/cookies";
+import { role } from "../models/user.model";
 
 const authenticateUser = async (
   req: Request,
@@ -42,7 +43,6 @@ const authenticateUser = async (
   }
 };
 
-type role = "reader" | "editor" | "admin";
 const authorizePermission = (...roles: role[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
     // @ts-ignore

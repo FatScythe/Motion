@@ -2,11 +2,12 @@ import { Schema, model, Document } from "mongoose";
 import bcrypt from "bcrypt";
 import config from "config";
 
+export type role = "reader" | "editor" | "admin";
 export interface IUser extends Document {
   name: string;
   email: string;
   password: string;
-  role: "editor" | "reader" | "admin";
+  role: role;
   isSubscribed?: boolean;
   comparePassword(Cpwd: string): Promise<boolean>;
 }
