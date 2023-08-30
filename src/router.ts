@@ -23,7 +23,7 @@ router.delete("/logout", authenticateUser, logoutUser);
 
 router.get("/user/showMe", authenticateUser, showMe);
 
-router.route("/post").get(getAllPost).post(addPost);
+router.route("/post").get(getAllPost).post(authenticateUser, addPost);
 
 router
   .route("/post/:id")
