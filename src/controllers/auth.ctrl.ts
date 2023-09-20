@@ -92,7 +92,7 @@ const logoutUser = async (req: Request, res: Response) => {
     expires: new Date(Date.now()),
   });
 
-  res.status(200).json({ msg: "User have been logged out" });
+  res.status(200).json({ msg: "User has been logged out" });
 };
 
 export { registerUser, loginUser, logoutUser };
