@@ -64,7 +64,6 @@ router.route("/post").get(getAllPost).post(authenticateUser, addPost);
 router
   .route("/post/:id")
   .get(authenticateVisitor, getPostLimiter, getSinglePost)
-  .post(authenticateUser, addPost)
   .patch([authenticateUser, authorizePermission("admin", "editor")], editPost)
   .delete(
     [authenticateUser, authorizePermission("admin", "editor")],
